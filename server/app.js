@@ -16,7 +16,7 @@ const orderRoutes = require('./routes/orders.routes');
 const paymentRoutes = require('./routes/payments.routes');
 const aiRoutes = require('./routes/ai.routes');
 const userRoutes = require('./routes/users.routes');
-
+const seedRoutes = require('./routes/seed.routes');
 const app = express();
 
 // ============================
@@ -72,7 +72,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/users', userRoutes);
-
+app.use('/api/seed', seedRoutes);
 // ============================
 // 404 Handler
 // ============================

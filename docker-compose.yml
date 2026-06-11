@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: bookhub-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - bookhub-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: bookhub-backend:latest
+    container_name: bookhub-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/bookhub
+      - JWT_SECRET=development_secret_do_not_use_in_prod
+      - JWT_EXPIRE=30d
+      - FRONTEND_URL=http://localhost:5173
+      - CLOUDINARY_CLOUD_NAME=dummy
+      - CLOUDINARY_API_KEY=dummy
+      - CLOUDINARY_API_SECRET=dummy
+      - AI_PROVIDER=mock
+      - GEMINI_API_KEY=
+      - OPENAI_API_KEY=
+    networks:
+      - bookhub-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: bookhub-frontend:latest
+    container_name: bookhub-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - bookhub-network
+
+networks:
+  bookhub-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

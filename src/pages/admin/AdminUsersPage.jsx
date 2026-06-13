@@ -32,15 +32,15 @@ export default function AdminUsersPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Manage Users</h1>
-          <p className="text-surface-400 text-sm">View and manage customer accounts</p>
+          <p className="text-on-surface-variant text-sm">View and manage customer accounts</p>
         </div>
       </div>
 
-      <div className="glass-dark rounded-2xl border border-surface-700 overflow-hidden">
+      <div className="glass-dark rounded-lg border border-neutral-high overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface-800/80 text-surface-400 text-xs uppercase tracking-wider border-b border-surface-700">
+              <tr className="bg-neutral-low/80 text-on-surface-variant text-xs uppercase tracking-wider border-b border-neutral-high">
                 <th className="p-4 font-medium">User</th>
                 <th className="p-4 font-medium">Contact</th>
                 <th className="p-4 font-medium">Role</th>
@@ -48,20 +48,20 @@ export default function AdminUsersPage() {
                 <th className="p-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-700/50">
+            <tbody className="divide-y divide-neutral-high/50">
               {isLoading ? (
                 <tr>
                   <td colSpan="5" className="p-8 text-center">
-                    <Loader2 className="w-6 h-6 text-brand-500 animate-spin mx-auto" />
+                    <Loader2 className="w-6 h-6 text-primary animate-spin mx-auto" />
                   </td>
                 </tr>
               ) : usersData?.data?.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="p-8 text-center text-surface-500">No users found.</td>
+                  <td colSpan="5" className="p-8 text-center text-outline">No users found.</td>
                 </tr>
               ) : (
                 usersData?.data.map((u) => (
-                  <tr key={u._id} className={`hover:bg-surface-800/30 transition-colors ${u.isSuspended ? 'opacity-50' : ''}`}>
+                  <tr key={u._id} className={`hover:bg-neutral-low/30 transition-colors ${u.isSuspended ? 'opacity-50' : ''}`}>
                     <td className="p-4">
                       <p className="font-bold text-white text-sm flex items-center gap-2">
                         {u.name}
@@ -69,17 +69,17 @@ export default function AdminUsersPage() {
                       </p>
                     </td>
                     <td className="p-4">
-                      <p className="text-sm text-surface-300">{u.email}</p>
-                      <p className="text-xs text-surface-500">{u.phone || 'No phone'}</p>
+                      <p className="text-sm text-on-surface">{u.email}</p>
+                      <p className="text-xs text-outline">{u.phone || 'No phone'}</p>
                     </td>
                     <td className="p-4">
                       <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded border ${
-                        u.role === 'admin' ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 'bg-surface-700 text-surface-300 border-surface-600'
+                        u.role === 'admin' ? 'bg-secondary/20 text-secondary border-secondary/30' : 'bg-neutral-high text-on-surface border-outline-variant'
                       }`}>
                         {u.role}
                       </span>
                     </td>
-                    <td className="p-4 text-sm text-surface-400">
+                    <td className="p-4 text-sm text-on-surface-variant">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
                     <td className="p-4 text-right">
@@ -108,11 +108,11 @@ export default function AdminUsersPage() {
         </div>
         
         {usersData?.totalPages > 1 && (
-          <div className="p-4 border-t border-surface-700 flex justify-between items-center bg-surface-800/50 text-sm">
-            <span className="text-surface-400">Showing page {page} of {usersData.totalPages}</span>
+          <div className="p-4 border-t border-neutral-high flex justify-between items-center bg-neutral-low/50 text-sm">
+            <span className="text-on-surface-variant">Showing page {page} of {usersData.totalPages}</span>
             <div className="flex gap-2">
-              <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1 bg-surface-700 text-white rounded hover:bg-surface-600 disabled:opacity-50">Prev</button>
-              <button disabled={page === usersData.totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1 bg-surface-700 text-white rounded hover:bg-surface-600 disabled:opacity-50">Next</button>
+              <button disabled={page === 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1 bg-neutral-high text-white rounded hover:bg-neutral-higher disabled:opacity-50">Prev</button>
+              <button disabled={page === usersData.totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1 bg-neutral-high text-white rounded hover:bg-neutral-higher disabled:opacity-50">Next</button>
             </div>
           </div>
         )}

@@ -188,6 +188,7 @@ const seed = async () => {
           country: 'Rwanda',
           phone: user.phone,
         },
+        orderNumber: `BH-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
         subtotal,
         shippingCost,
         tax,

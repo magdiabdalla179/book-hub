@@ -67,15 +67,15 @@ export default function BooksPage() {
         {/* Header & Search */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-display font-bold text-white">Browse Books</h1>
-            <p className="text-surface-400 mt-1">
+            <h1 className="text-3xl font-display font-bold text-on-surface">Browse Books</h1>
+            <p className="text-on-surface-variant mt-1">
               {productsData?.total || 0} books found
             </p>
           </div>
           
           <div className="flex items-center gap-3 w-full md:w-auto">
             <form onSubmit={handleSearch} className="relative flex-1 md:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
               <input
                 type="text"
                 name="search"
@@ -100,11 +100,11 @@ export default function BooksPage() {
               
               {/* Sort */}
               <div>
-                <h3 className="text-white font-semibold mb-3">Sort By</h3>
+                <h3 className="text-on-surface font-semibold mb-3">Sort By</h3>
                 <select
                   value={currentSort}
                   onChange={(e) => handleFilterChange('sort', e.target.value)}
-                  className="w-full bg-surface-700 border border-surface-600 rounded-lg p-2.5 text-surface-200 outline-none focus:border-brand-500"
+                  className="w-full bg-neutral-high border border-outline-variant rounded-lg p-2.5 text-on-surface outline-none focus:border-primary"
                 >
                   <option value="-createdAt">Newest Arrivals</option>
                   <option value="-salesCount">Best Sellers</option>
@@ -116,7 +116,7 @@ export default function BooksPage() {
 
               {/* Categories */}
               <div>
-                <h3 className="text-white font-semibold mb-3">Categories</h3>
+                <h3 className="text-on-surface font-semibold mb-3">Categories</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input
@@ -124,9 +124,9 @@ export default function BooksPage() {
                       name="category"
                       checked={!currentCategory}
                       onChange={() => handleFilterChange('category', '')}
-                      className="w-4 h-4 text-brand-500 bg-surface-700 border-surface-600 focus:ring-brand-500"
+                      className="w-4 h-4 text-primary bg-neutral-high border-outline-variant focus:ring-primary"
                     />
-                    <span className="text-surface-300 group-hover:text-white transition-colors">All Categories</span>
+                    <span className="text-on-surface group-hover:text-on-surface transition-colors">All Categories</span>
                   </label>
                   {categoriesData?.map((cat) => (
                     <label key={cat._id} className="flex items-center gap-3 cursor-pointer group">
@@ -135,10 +135,10 @@ export default function BooksPage() {
                         name="category"
                         checked={currentCategory === cat._id}
                         onChange={() => handleFilterChange('category', cat._id)}
-                        className="w-4 h-4 text-brand-500 bg-surface-700 border-surface-600 focus:ring-brand-500"
+                        className="w-4 h-4 text-primary bg-neutral-high border-outline-variant focus:ring-primary"
                       />
-                      <span className="text-surface-300 group-hover:text-white transition-colors flex-1">{cat.name}</span>
-                      <span className="text-xs text-surface-500 bg-surface-700 px-2 py-0.5 rounded-full">
+                      <span className="text-on-surface group-hover:text-on-surface transition-colors flex-1">{cat.name}</span>
+                      <span className="text-xs text-outline bg-neutral-high px-2 py-0.5 rounded-full">
                         {cat.productCount}
                       </span>
                     </label>
@@ -148,7 +148,7 @@ export default function BooksPage() {
 
               {/* Format */}
               <div>
-                <h3 className="text-white font-semibold mb-3">Format</h3>
+                <h3 className="text-on-surface font-semibold mb-3">Format</h3>
                 <div className="space-y-2">
                   {['', 'physical', 'ebook', 'both'].map((format) => (
                     <label key={format} className="flex items-center gap-3 cursor-pointer group">
@@ -157,9 +157,9 @@ export default function BooksPage() {
                         name="format"
                         checked={currentFormat === format}
                         onChange={() => handleFilterChange('format', format)}
-                        className="w-4 h-4 text-brand-500 bg-surface-700 border-surface-600 focus:ring-brand-500"
+                        className="w-4 h-4 text-primary bg-neutral-high border-outline-variant focus:ring-primary"
                       />
-                      <span className="text-surface-300 group-hover:text-white transition-colors capitalize">
+                      <span className="text-on-surface group-hover:text-on-surface transition-colors capitalize">
                         {format || 'All Formats'}
                       </span>
                     </label>
@@ -180,9 +180,9 @@ export default function BooksPage() {
               </div>
             ) : productsData?.data?.length === 0 ? (
               <div className="glass-dark p-12 text-center flex flex-col items-center justify-center">
-                <BookOpen className="w-16 h-16 text-surface-600 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">No books found</h3>
-                <p className="text-surface-400">Try adjusting your filters or search query.</p>
+                <BookOpen className="w-16 h-16 text-outline mb-4" />
+                <h3 className="text-xl font-bold text-on-surface mb-2">No books found</h3>
+                <p className="text-on-surface-variant">Try adjusting your filters or search query.</p>
                 <button 
                   onClick={() => setSearchParams({})}
                   className="btn-outline mt-6"
@@ -204,17 +204,17 @@ export default function BooksPage() {
                     <button
                       disabled={currentPage === 1}
                       onClick={() => handleFilterChange('page', currentPage - 1)}
-                      className="px-4 py-2 rounded-lg bg-surface-800 text-white border border-surface-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-700"
+                      className="px-4 py-2 rounded-lg bg-neutral-low text-on-surface border border-neutral-high disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-high"
                     >
                       Previous
                     </button>
-                    <span className="px-4 py-2 text-surface-300 flex items-center">
+                    <span className="px-4 py-2 text-on-surface flex items-center">
                       Page {currentPage} of {productsData.totalPages}
                     </span>
                     <button
                       disabled={currentPage === productsData.totalPages}
                       onClick={() => handleFilterChange('page', currentPage + 1)}
-                      className="px-4 py-2 rounded-lg bg-surface-800 text-white border border-surface-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-700"
+                      className="px-4 py-2 rounded-lg bg-neutral-low text-on-surface border border-neutral-high disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-high"
                     >
                       Next
                     </button>

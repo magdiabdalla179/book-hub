@@ -8,6 +8,8 @@ const compression = require('compression');
 const { errorHandler } = require('./middleware/errorHandler');
 const { apiLimiter } = require('./middleware/rateLimiter');
 
+require('./models');
+
 // Routes
 const authRoutes = require('./routes/auth.routes');
 const productRoutes = require('./routes/products.routes');
@@ -18,6 +20,8 @@ const aiRoutes = require('./routes/ai.routes');
 const userRoutes = require('./routes/users.routes');
 const seedRoutes = require('./routes/seed.routes');
 const app = express();
+
+app.set('trust proxy', 1);
 
 // ============================
 // Security Middleware
@@ -52,7 +56,7 @@ app.use('/api/', apiLimiter);
 // ============================
 // Health Check
 // ============================
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     service: 'BookHub API',

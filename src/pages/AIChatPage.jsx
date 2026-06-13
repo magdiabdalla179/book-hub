@@ -97,13 +97,13 @@ export default function AIChatPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen page-bg pt-24 pb-20 flex items-center justify-center">
-        <div className="glass-dark p-8 rounded-2xl text-center max-w-md w-full mx-4">
-          <div className="w-20 h-20 bg-brand-500/20 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="glass-dark p-8 rounded-lg text-center max-w-md w-full mx-4">
+          <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-10 h-10" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-4">AI Chat Assistant</h2>
           <p className="text-surface-300 mb-8">Please log in to get personalized book recommendations and chat with our AI.</p>
-          <button onClick={() => navigate('/login')} className="btn-brand w-full">Log In to Chat</button>
+          <button onClick={() => navigate('/login')} className="btn-primary w-full">Log In to Chat</button>
         </div>
       </div>
     );
@@ -113,14 +113,14 @@ export default function AIChatPage() {
     <div className="min-h-screen page-bg pt-20 flex flex-col md:flex-row h-screen">
       
       {/* Sidebar - Chat History */}
-      <aside className="w-full md:w-80 border-r border-surface-800 bg-surface-900/50 flex flex-col h-full hidden md:flex shrink-0">
-        <div className="p-4 border-b border-surface-800 flex items-center justify-between">
+      <aside className="w-full md:w-80 border-r border-neutral-low bg-neutral/50 flex flex-col h-full hidden md:flex shrink-0">
+        <div className="p-4 border-b border-neutral-low flex items-center justify-between">
           <h2 className="font-bold text-white flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-brand-400" /> BookBot
+            <Sparkles className="w-5 h-5 text-primary" /> BookBot
           </h2>
           <button 
             onClick={startNewChat}
-            className="p-2 text-surface-400 hover:text-white bg-surface-800 rounded-lg hover:bg-surface-700 transition-colors tooltip"
+            className="p-2 text-on-surface-variant hover:text-on-surface bg-neutral-low rounded-lg hover:bg-neutral-high transition-colors tooltip"
             title="New Chat"
           >
             <RefreshCw className="w-4 h-4" />
@@ -133,10 +133,10 @@ export default function AIChatPage() {
             <button
               key={session.sessionId}
               onClick={() => loadSession(session.sessionId)}
-              className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm line-clamp-1 ${
+              className={`w-full text-left px-4 py-3 rounded-lg transition-colors text-sm line-clamp-1 ${
                 sessionId === session.sessionId 
-                  ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' 
-                  : 'text-surface-300 hover:bg-surface-800 hover:text-white border border-transparent'
+                  ? 'bg-primary/10 text-primary border border-primary/20' 
+                  : 'text-on-surface hover:bg-neutral-low hover:text-on-surface border border-transparent'
               }`}
             >
               {session.messages[0]?.content || 'New Chat'}
@@ -149,12 +149,12 @@ export default function AIChatPage() {
       </aside>
 
       {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col h-full bg-surface-900 relative">
+      <main className="flex-1 flex flex-col h-full bg-neutral relative">
         
         {/* Mobile Header */}
-        <div className="md:hidden p-4 border-b border-surface-800 bg-surface-900/90 backdrop-blur sticky top-0 z-10 flex items-center justify-between">
+        <div className="md:hidden p-4 border-b border-neutral-low bg-neutral/90 backdrop-blur sticky top-0 z-10 flex items-center justify-between">
           <h2 className="font-bold text-white flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-brand-400" /> BookBot
+            <Sparkles className="w-5 h-5 text-primary" /> BookBot
           </h2>
           <button onClick={startNewChat} className="btn-outline py-1.5 px-3 text-xs flex items-center gap-1.5">
             <RefreshCw className="w-3 h-3" /> New
@@ -170,19 +170,19 @@ export default function AIChatPage() {
                 className={`flex items-start gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
               >
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                  msg.role === 'user' ? 'bg-surface-700' : 'bg-gradient-brand shadow-glow'
+                  msg.role === 'user' ? 'bg-neutral-high' : 'bg-gradient-primary'
                 }`}>
                   {msg.role === 'user' ? <User className="w-4 h-4 text-surface-300" /> : <Sparkles className="w-4 h-4 text-white" />}
                 </div>
                 
-                <div className={`max-w-[80%] rounded-2xl px-6 py-4 ${
+                <div className={`max-w-[80%] rounded-lg px-6 py-4 ${
                   msg.role === 'user' 
-                    ? 'bg-surface-800 text-white rounded-tr-sm border border-surface-700' 
+                    ? 'bg-neutral-low text-on-surface rounded-tr-sm border border-neutral-high' 
                     : 'glass-dark text-surface-100 rounded-tl-sm prose prose-invert prose-p:leading-relaxed max-w-none'
                 }`}>
                   {msg.content}
                   {msg.provider && msg.role === 'assistant' && (
-                    <span className="text-xs text-surface-500 mt-4 block italic flex items-center gap-1 border-t border-surface-700/50 pt-2">
+                    <span className="text-xs text-outline mt-4 block italic flex items-center gap-1 border-t border-neutral-high/50 pt-2">
                       <Settings className="w-3 h-3" /> Powered by {msg.provider === 'gemini' ? 'Google Gemini' : msg.provider === 'openai' ? 'OpenAI' : 'Mock AI'}
                     </span>
                   )}
@@ -191,11 +191,11 @@ export default function AIChatPage() {
             ))}
             {chatMutation.isPending && (
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-gradient-brand flex items-center justify-center shrink-0 shadow-glow">
+                <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center shrink-0">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
-                <div className="glass-dark rounded-2xl rounded-tl-sm px-6 py-4">
-                  <Loader2 className="w-5 h-5 text-brand-400 animate-spin" />
+                <div className="glass-dark rounded-lg rounded-tl-sm px-6 py-4">
+                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
                 </div>
               </div>
             )}
@@ -204,7 +204,7 @@ export default function AIChatPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4 sm:p-6 border-t border-surface-800 bg-surface-900/90 backdrop-blur">
+        <div className="p-4 sm:p-6 border-t border-neutral-low bg-neutral/90 backdrop-blur">
           <form onSubmit={handleSubmit} className="max-w-4xl mx-auto relative">
             <input
               type="text"
@@ -212,12 +212,12 @@ export default function AIChatPage() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Ask about books, authors, or genres..."
               disabled={chatMutation.isPending}
-              className="w-full bg-surface-800 border border-surface-700 rounded-2xl pl-6 pr-16 py-4 text-white placeholder-surface-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-inner"
+              className="w-full bg-neutral-low border border-neutral-high rounded-lg pl-6 pr-16 py-4 text-on-surface placeholder-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-inner"
             />
             <button
               type="submit"
               disabled={!message.trim() || chatMutation.isPending}
-              className="absolute right-2 top-2 bottom-2 bg-brand-500 text-white p-3 rounded-xl hover:bg-brand-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shadow-md"
+              className="absolute right-2 top-2 bottom-2 bg-primary text-primary-on p-3 rounded-lg hover:bg-primary-dim disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center shadow-md"
             >
               <Send className="w-5 h-5" />
             </button>

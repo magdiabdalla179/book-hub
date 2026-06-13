@@ -15,14 +15,14 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-surface-900 flex flex-col">
+    <div className="min-h-screen bg-neutral flex flex-col">
       <Navbar />
       
       <div className="flex-1 flex pt-20">
         {/* Admin Sidebar */}
-        <aside className="w-64 fixed top-20 bottom-0 left-0 bg-surface-800 border-r border-surface-700 overflow-y-auto hidden lg:block">
+        <aside className="w-64 fixed top-20 bottom-0 left-0 bg-neutral-low border-r border-neutral-high overflow-y-auto hidden lg:block">
           <div className="p-6">
-            <h2 className="text-xs font-bold text-surface-500 uppercase tracking-wider mb-4">
+            <h2 className="text-xs font-bold text-outline uppercase tracking-wider mb-4">
               Admin Controls
             </h2>
             <nav className="space-y-2">

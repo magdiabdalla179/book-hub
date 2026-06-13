@@ -122,7 +122,9 @@ const getMyOrders = asyncHandler(async (req, res) => {
 });
 
 const getOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findByPk(req.params.id);
+  const order = await Order.findByPk(req.params.id, {
+    include: [{ model: User, as: 'user', attributes: ['id', 'name', 'email'] }],
+  });
 
   if (!order) {
     return res.status(404).json({ success: false, message: 'Order not found.' });
@@ -150,6 +152,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
       order: [['createdAt', 'DESC']],
       offset: skip,
       limit,
+      include: [{ model: User, as: 'user', attributes: ['id', 'name', 'email'] }],
     }),
     Order.count({ where }),
   ]);
@@ -170,7 +173,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, message: 'Order not found.' });
   }
 
-  const { orderStatus, trackingNumber } = req.body;
+  const orderStatus = req.body.orderStatus || req.body.status;
+  const { trackingNumber } = req.body;
 
   order.orderStatus = orderStatus;
   if (trackingNumber) order.trackingNumber = trackingNumber;

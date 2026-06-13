@@ -55,10 +55,10 @@ export default function UserDashboardPage() {
           
           {/* Sidebar */}
           <aside className="w-full lg:w-64 shrink-0">
-            <div className="glass-dark p-6 rounded-2xl sticky top-24">
+            <div className="glass-dark p-6 rounded-lg sticky top-24">
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
-                  <User className="w-6 h-6 text-brand-400" />
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                  <User className="w-6 h-6 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-white font-bold">{user?.name}</h3>
@@ -74,10 +74,10 @@ export default function UserDashboardPage() {
                     <button
                       key={tab.id}
                       onClick={() => setTab(tab.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all text-sm font-medium ${
                         isActive 
-                          ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20' 
-                          : 'text-surface-400 hover:text-white hover:bg-surface-800 border border-transparent'
+                          ? 'bg-primary/10 text-primary border border-primary/20' 
+                          : 'text-on-surface-variant hover:text-on-surface hover:bg-neutral-low border border-transparent'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -90,7 +90,7 @@ export default function UserDashboardPage() {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 glass-dark p-6 sm:p-8 rounded-2xl min-h-[600px]">
+          <main className="flex-1 glass-dark p-6 sm:p-8 rounded-lg min-h-[600px]">
             
             {/* Overview Tab */}
             {activeTab === 'overview' && (
@@ -98,19 +98,19 @@ export default function UserDashboardPage() {
                 <h2 className="text-2xl font-bold text-white mb-6">Welcome Back, {user?.name.split(' ')[0]}!</h2>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-surface-800 p-6 rounded-2xl border border-surface-700">
-                    <Package className="w-8 h-8 text-brand-400 mb-4" />
+                  <div className="bg-neutral-low p-6 rounded-lg border border-neutral-high">
+                    <Package className="w-8 h-8 text-primary mb-4" />
                     <h4 className="text-surface-400 text-sm mb-1">Total Orders</h4>
                     <span className="text-2xl font-bold text-white">{myOrders?.length || 0}</span>
                   </div>
-                  <div className="bg-surface-800 p-6 rounded-2xl border border-surface-700">
+                  <div className="bg-neutral-low p-6 rounded-lg border border-neutral-high">
                     <BookOpen className="w-8 h-8 text-blue-400 mb-4" />
                     <h4 className="text-surface-400 text-sm mb-1">E-Books Owned</h4>
                     <span className="text-2xl font-bold text-white">
                       {myOrders?.reduce((acc, order) => acc + order.items.filter(i => i.format !== 'physical').length, 0) || 0}
                     </span>
                   </div>
-                  <div className="bg-surface-800 p-6 rounded-2xl border border-surface-700">
+                  <div className="bg-neutral-low p-6 rounded-lg border border-neutral-high">
                     <Heart className="w-8 h-8 text-red-400 mb-4" />
                     <h4 className="text-surface-400 text-sm mb-1">Wishlist Items</h4>
                     <span className="text-2xl font-bold text-white">{wishlist?.length || 0}</span>
@@ -121,20 +121,20 @@ export default function UserDashboardPage() {
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold text-white">Recent Orders</h3>
-                    <button onClick={() => setTab('orders')} className="text-sm text-brand-400 hover:text-brand-300">View All</button>
+                    <button onClick={() => setTab('orders')} className="text-sm text-primary hover:text-primary-dim">View All</button>
                   </div>
                   <div className="space-y-4">
                     {loadingOrders ? (
                       <div className="skeleton h-24" />
                     ) : myOrders?.slice(0, 2).map((order) => (
-                      <div key={order._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-surface-800 rounded-xl border border-surface-700 gap-4">
+                      <div key={order._id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-neutral-low rounded-lg border border-neutral-high gap-4">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-bold text-white">#{order.orderNumber}</span>
                             <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${
                               order.orderStatus === 'delivered' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                               order.orderStatus === 'cancelled' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                              'bg-brand-500/20 text-brand-400 border border-brand-500/30'
+                              'bg-primary/20 text-primary border border-primary/30'
                             }`}>
                               {order.orderStatus}
                             </span>
@@ -144,7 +144,7 @@ export default function UserDashboardPage() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-brand-400 mb-1">RWF {order.total.toLocaleString()}</p>
+                          <p className="font-bold text-primary mb-1">RWF {order.total.toLocaleString()}</p>
                           <p className="text-xs text-surface-400">{order.items.length} items</p>
                         </div>
                       </div>
@@ -161,8 +161,8 @@ export default function UserDashboardPage() {
                 <h2 className="text-2xl font-bold text-white mb-6">Order History</h2>
                 <div className="space-y-6">
                   {myOrders?.map((order) => (
-                    <div key={order._id} className="bg-surface-800 rounded-2xl border border-surface-700 overflow-hidden">
-                      <div className="bg-surface-900/50 p-4 border-b border-surface-700 flex flex-wrap justify-between items-center gap-4">
+                    <div key={order._id} className="bg-neutral-low rounded-lg border border-neutral-high overflow-hidden">
+                      <div className="bg-neutral/50 p-4 border-b border-neutral-high flex flex-wrap justify-between items-center gap-4">
                         <div>
                           <p className="text-xs text-surface-400 uppercase tracking-wider mb-1">Order Number</p>
                           <p className="font-bold text-white">#{order.orderNumber}</p>
@@ -173,13 +173,13 @@ export default function UserDashboardPage() {
                         </div>
                         <div>
                           <p className="text-xs text-surface-400 uppercase tracking-wider mb-1">Total</p>
-                          <p className="text-brand-400 font-bold">RWF {order.total.toLocaleString()}</p>
+                          <p className="text-primary font-bold">RWF {order.total.toLocaleString()}</p>
                         </div>
                         <div>
                           <p className="text-xs text-surface-400 uppercase tracking-wider mb-1">Status</p>
                           <span className={`text-xs uppercase font-bold px-2 py-1 rounded inline-block ${
                             order.orderStatus === 'delivered' ? 'bg-green-500/20 text-green-400' :
-                            'bg-brand-500/20 text-brand-400'
+                            'bg-primary/20 text-primary'
                           }`}>
                             {order.orderStatus}
                           </span>
@@ -187,7 +187,7 @@ export default function UserDashboardPage() {
                       </div>
                       <div className="p-4">
                         {order.items.map((item) => (
-                          <div key={item._id} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0 border-b border-surface-700/50 last:border-0">
+                          <div key={item._id} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0 border-b border-neutral-high/50 last:border-0">
                             <img src={item.coverImage} alt={item.title} className="w-12 h-16 object-cover rounded shadow" />
                             <div className="flex-1">
                               <h4 className="font-medium text-white text-sm line-clamp-1">{item.title}</h4>
@@ -203,7 +203,7 @@ export default function UserDashboardPage() {
                     <div className="text-center py-12">
                       <Package className="w-12 h-12 text-surface-600 mx-auto mb-4" />
                       <p className="text-surface-400 mb-4">You haven't placed any orders yet.</p>
-                      <Link to="/books" className="btn-brand">Browse Books</Link>
+                      <Link to="/books" className="btn-primary">Browse Books</Link>
                     </div>
                   )}
                 </div>
@@ -219,7 +219,7 @@ export default function UserDashboardPage() {
                     order.items
                       .filter(item => item.format !== 'physical')
                       .map(item => (
-                        <div key={`${order._id}-${item._id}`} className="bg-surface-800 rounded-xl p-4 border border-surface-700 flex gap-4">
+                        <div key={`${order._id}-${item._id}`} className="bg-neutral-low rounded-lg p-4 border border-neutral-high flex gap-4">
                           <img src={item.coverImage} alt={item.title} className="w-16 h-24 object-cover rounded shadow-md" />
                           <div className="flex flex-col justify-between">
                             <div>
@@ -237,10 +237,10 @@ export default function UserDashboardPage() {
                       ))
                   )}
                   {(!myOrders || myOrders.every(o => !o.items.some(i => i.format !== 'physical'))) && (
-                    <div className="col-span-full text-center py-12 border-2 border-dashed border-surface-700 rounded-2xl">
+                    <div className="col-span-full text-center py-12 border-2 border-dashed border-neutral-high rounded-lg">
                       <Download className="w-12 h-12 text-surface-600 mx-auto mb-4" />
                       <p className="text-surface-400 mb-4">Your digital library is empty.</p>
-                      <Link to="/books?format=ebook" className="btn-brand">Shop E-Books</Link>
+                      <Link to="/books?format=ebook" className="btn-primary">Shop E-Books</Link>
                     </div>
                   )}
                 </div>
@@ -254,13 +254,13 @@ export default function UserDashboardPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
                   {wishlist?.map((book) => (
                     <Link key={book._id} to={`/books/${book._id}`} className="group relative">
-                      <div className="aspect-[2/3] rounded-xl overflow-hidden mb-3">
+                      <div className="aspect-[2/3] rounded-lg overflow-hidden mb-3">
                         <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         <div className="absolute top-2 right-2 p-1.5 bg-red-500/20 backdrop-blur text-red-500 rounded-full border border-red-500/30">
                           <Heart className="w-4 h-4 fill-current" />
                         </div>
                       </div>
-                      <h4 className="font-medium text-white text-sm line-clamp-1 group-hover:text-brand-400 transition-colors">{book.title}</h4>
+                      <h4 className="font-medium text-white text-sm line-clamp-1 group-hover:text-primary transition-colors">{book.title}</h4>
                       <p className="text-xs text-surface-400 mt-1">RWF {(book.discountPrice ?? book.price).toLocaleString()}</p>
                     </Link>
                   ))}
@@ -268,7 +268,7 @@ export default function UserDashboardPage() {
                     <div className="col-span-full text-center py-12">
                       <Heart className="w-12 h-12 text-surface-600 mx-auto mb-4" />
                       <p className="text-surface-400 mb-4">Your wishlist is empty.</p>
-                      <Link to="/books" className="btn-brand">Browse Books</Link>
+                      <Link to="/books" className="btn-primary">Browse Books</Link>
                     </div>
                   )}
                 </div>
@@ -280,8 +280,8 @@ export default function UserDashboardPage() {
               <div className="animate-fade-in max-w-2xl">
                 <h2 className="text-2xl font-bold text-white mb-6">Account Settings</h2>
                 <div className="space-y-6">
-                  <div className="bg-surface-800 p-6 rounded-2xl border border-surface-700">
-                    <h3 className="font-semibold text-white mb-4 border-b border-surface-700 pb-2">Profile Information</h3>
+                  <div className="bg-neutral-low p-6 rounded-lg border border-neutral-high">
+                    <h3 className="font-semibold text-white mb-4 border-b border-neutral-high pb-2">Profile Information</h3>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-surface-400 mb-1">Full Name</label>

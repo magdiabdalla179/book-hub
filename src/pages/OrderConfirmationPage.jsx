@@ -17,7 +17,7 @@ export default function OrderConfirmationPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen page-bg flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -60,16 +60,16 @@ export default function OrderConfirmationPage() {
             
             {/* E-Book Downloads Section */}
             {hasEbooks && (
-              <div className="glass-dark p-8 rounded-2xl border border-brand-500/30 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 h-full bg-brand-500" />
+              <div className="glass-dark p-8 rounded-lg border border-brand-500/30 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                  <Download className="w-6 h-6 text-brand-400" /> Your Digital Books
+                  <Download className="w-6 h-6 text-primary" /> Your Digital Books
                 </h2>
                 <div className="space-y-4">
                   {orderData.items
                     .filter(item => item.format === 'ebook' || item.format === 'both')
                     .map(item => (
-                      <div key={item._id} className="flex items-center justify-between p-4 bg-surface-800 rounded-xl">
+                      <div key={item._id} className="flex items-center justify-between p-4 bg-neutral-low rounded-lg">
                         <div className="flex items-center gap-4">
                           <img src={item.coverImage} alt={item.title} className="w-12 h-16 object-cover rounded shadow" />
                           <div>
@@ -79,7 +79,7 @@ export default function OrderConfirmationPage() {
                         </div>
                         <button 
                           onClick={() => handleDownload(item.product, item.title)}
-                          className="btn-brand py-2 px-4 text-sm flex items-center gap-2"
+                          className="btn-primary py-2 px-4 text-sm flex items-center gap-2"
                         >
                           <Download className="w-4 h-4" /> Download
                         </button>
@@ -91,11 +91,11 @@ export default function OrderConfirmationPage() {
 
             {/* Physical Delivery Info */}
             {hasPhysical && (
-              <div className="glass-dark p-8 rounded-2xl">
+              <div className="glass-dark p-8 rounded-lg">
                 <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                   <Package className="w-6 h-6 text-surface-400" /> Delivery Information
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-surface-800 p-6 rounded-xl border border-surface-700">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-neutral-low p-6 rounded-lg border border-neutral-high">
                   <div>
                     <h4 className="text-sm font-medium text-surface-400 mb-2">Shipping Address</h4>
                     <p className="text-white font-medium">{orderData.shippingAddress.fullName}</p>
@@ -106,7 +106,7 @@ export default function OrderConfirmationPage() {
                   <div>
                     <h4 className="text-sm font-medium text-surface-400 mb-2">Estimated Delivery</h4>
                     <p className="text-white font-medium text-lg">2-5 Business Days</p>
-                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-brand-500/20 text-brand-400 text-xs font-bold uppercase rounded border border-brand-500/30">
+                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary text-xs font-bold uppercase rounded border border-primary/30">
                       Status: Processing
                     </div>
                   </div>
@@ -116,7 +116,7 @@ export default function OrderConfirmationPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link to="/dashboard" className="btn-brand flex-1 text-center">
+              <Link to="/dashboard" className="btn-primary flex-1 text-center">
                 View My Account
               </Link>
               <Link to="/books" className="btn-outline flex-1 text-center flex justify-center items-center gap-2">
@@ -128,7 +128,7 @@ export default function OrderConfirmationPage() {
 
           {/* Sidebar / Receipt */}
           <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <div className="glass-dark p-6 rounded-2xl sticky top-24">
+            <div className="glass-dark p-6 rounded-lg sticky top-24">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-bold text-white text-lg">Order Receipt</h3>
                 <span className="text-sm text-surface-400">#{orderData.orderNumber}</span>
@@ -147,7 +147,7 @@ export default function OrderConfirmationPage() {
                 ))}
               </div>
 
-              <div className="space-y-3 py-4 border-y border-surface-800 mb-4">
+              <div className="space-y-3 py-4 border-y border-neutral-low mb-4">
                 <div className="flex justify-between text-sm text-surface-400">
                   <span>Subtotal</span>
                   <span className="text-white">RWF {orderData.subtotal.toLocaleString()}</span>
@@ -166,7 +166,7 @@ export default function OrderConfirmationPage() {
 
               <div className="flex justify-between items-center mb-6">
                 <span className="font-bold text-white">Total Paid</span>
-                <span className="text-2xl font-bold text-brand-400">RWF {orderData.total.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-primary">RWF {orderData.total.toLocaleString()}</span>
               </div>
 
               <div className="flex items-center gap-2 text-xs text-surface-500 justify-center">

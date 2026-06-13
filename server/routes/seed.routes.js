@@ -159,7 +159,12 @@ router.get('/', protect, authorize('admin'), async (req, res) => {
     }
 
     const existingOrders = await Order.count();
-    if (existingOrders === 0) {
+    if (existingOrders === 0 || req.query.forceOrders === 'true') {
+      if (req.query.forceOrders === 'true') {
+        await Order.destroy({ where: {}, truncate: { cascade: true } });
+        await Wishlist.destroy({ where: {} });
+        await Review.destroy({ where: {} });
+      }
       const orderStatuses = ['delivered', 'delivered', 'delivered', 'shipped', 'processing', 'pending'];
       for (let i = 0; i < 12; i++) {
         const user = randomItem(customerUsers);

@@ -138,11 +138,20 @@ const getWishlist = asyncHandler(async (req, res) => {
     order: [['createdAt', 'DESC']],
   });
 
-  const data = items.map((item) => ({
-    _id: item.id,
-    product: item.product,
-    addedAt: item.createdAt,
-  }));
+  const data = items.map((item) => {
+    const p = item.product;
+    return {
+      _id: p.id,
+      coverImage: p.coverImage,
+      title: p.title,
+      author: p.author,
+      price: typeof p.price === 'string' ? parseFloat(p.price) : p.price,
+      discountPrice: typeof p.discountPrice === 'string' ? parseFloat(p.discountPrice) : p.discountPrice,
+      ratingsAverage: p.ratingsAverage,
+      format: p.format,
+      addedAt: item.createdAt,
+    };
+  });
 
   res.json({ success: true, data });
 });

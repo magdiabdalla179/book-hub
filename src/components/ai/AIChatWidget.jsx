@@ -95,10 +95,10 @@ export default function AIChatWidget() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-brand rounded-full shadow-brand-lg flex items-center justify-center text-white hover:scale-110 transition-transform z-40 group"
+            className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-primary rounded-full flex items-center justify-center text-on-surface hover:scale-110 transition-transform z-40 group"
           >
             <Bot className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-            <span className="absolute -top-2 -right-2 bg-red-500 w-4 h-4 rounded-full border-2 border-surface-900" />
+            <span className="absolute -top-2 -right-2 bg-red-500 w-4 h-4 rounded-full border-2 border-neutral" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -110,46 +110,46 @@ export default function AIChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] bg-surface-900 border border-surface-700 rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden"
+            className="fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] bg-neutral border border-neutral-high rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-surface-800 border-b border-surface-700 p-4 flex items-center justify-between">
+            <div className="bg-neutral-low border-b border-neutral-high p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-brand flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-on-surface" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold flex items-center gap-2">
-                    BookBot <Sparkles className="w-4 h-4 text-brand-400" />
+                  <h3 className="text-on-surface font-semibold flex items-center gap-2">
+                    BookBot <Sparkles className="w-4 h-4 text-primary" />
                   </h3>
-                  <p className="text-xs text-surface-400">Online | AI Assistant</p>
+                  <p className="text-xs text-on-surface-variant">Online | AI Assistant</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 text-surface-400 hover:text-white rounded-full hover:bg-surface-700 transition-colors"
+                className="p-2 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-neutral-high transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-900/50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-neutral/50">
               {localMessages.map((msg, idx) => (
                 <div
                   key={idx}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
+                    className={`max-w-[85%] rounded-lg px-4 py-3 text-sm ${
                       msg.role === 'user'
-                        ? 'bg-gradient-brand text-white rounded-br-sm'
-                        : 'glass-dark text-surface-100 rounded-bl-sm'
+                        ? 'bg-gradient-primary text-on-surface rounded-br-sm'
+                        : 'glass-dark text-on-surface rounded-bl-sm'
                     }`}
                   >
                     <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                     {msg.provider && msg.role === 'assistant' && (
-                      <span className="text-[10px] text-surface-500 mt-2 block italic">
+                      <span className="text-[10px] text-outline mt-2 block italic">
                         Powered by {msg.provider === 'gemini' ? 'Google Gemini' : msg.provider === 'openai' ? 'OpenAI' : 'Mock AI'}
                       </span>
                     )}
@@ -158,8 +158,8 @@ export default function AIChatWidget() {
               ))}
               {chatMutation.isPending && (
                 <div className="flex justify-start">
-                  <div className="glass-dark rounded-2xl rounded-bl-sm px-4 py-3">
-                    <Loader2 className="w-5 h-5 text-brand-400 animate-spin" />
+                  <div className="glass-dark rounded-lg rounded-bl-sm px-4 py-3">
+                    <Loader2 className="w-5 h-5 text-primary animate-spin" />
                   </div>
                 </div>
               )}
@@ -167,20 +167,20 @@ export default function AIChatWidget() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-surface-800 border-t border-surface-700">
+            <div className="p-4 bg-neutral-low border-t border-neutral-high">
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <input
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={isAuthenticated ? "Ask for recommendations..." : "Log in to chat..."}
-                  className="flex-1 bg-surface-900 border border-surface-600 rounded-xl px-4 py-2.5 text-sm text-surface-100 placeholder-surface-400 focus:outline-none focus:border-brand-500"
+                  className="flex-1 bg-neutral border border-outline-variant rounded-lg px-4 py-2.5 text-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
                   disabled={chatMutation.isPending}
                 />
                 <button
                   type="submit"
                   disabled={!message.trim() || chatMutation.isPending}
-                  className="bg-brand-500 text-white p-2.5 rounded-xl hover:bg-brand-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                  className="bg-primary text-primary-on p-2.5 rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
                 >
                   <Send className="w-5 h-5" />
                 </button>

@@ -28,7 +28,7 @@ export const useThemeStore = create(
       },
     }),
     {
-      name: 'bookhub-theme',
+      name: 'terra-theme',
     }
   )
 );

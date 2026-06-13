@@ -103,9 +103,9 @@ export default function CheckoutPage() {
         {/* Progress Bar */}
         <div className="mb-12">
           <div className="flex items-center justify-between relative">
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-surface-800 rounded-full z-0" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-neutral-low rounded-full z-0" />
             <div 
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-500 rounded-full z-0 transition-all duration-500"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full z-0 transition-all duration-500"
               style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
             />
             
@@ -117,9 +117,9 @@ export default function CheckoutPage() {
               return (
                 <div key={step.num} className="relative z-10 flex flex-col items-center gap-2">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
-                    isActive ? 'bg-brand-500 border-brand-500 text-white shadow-glow' :
+                    isActive ? 'bg-primary border-primary text-primary-on' :
                     isPast ? 'bg-green-500 border-green-500 text-white' :
-                    'bg-surface-900 border-surface-700 text-surface-500'
+                    'bg-neutral border-neutral-high text-outline'
                   }`}>
                     {isPast ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                   </div>
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
-          <div className="flex-1 glass-dark p-8 rounded-2xl">
+          <div className="flex-1 glass-dark p-8 rounded-lg">
             
             {/* Step 1: Details */}
             {currentStep === 1 && (
@@ -172,7 +172,7 @@ export default function CheckoutPage() {
               <div className="space-y-6 animate-fade-in">
                 <h2 className="text-2xl font-bold text-white mb-6">Shipping Address</h2>
                 {!needsShipping ? (
-                  <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                  <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                     <p className="text-blue-400 font-medium">Digital order only!</p>
                     <p className="text-surface-300 text-sm mt-1">
                       Your order contains only e-books. No physical shipping address is required. They will be available for download instantly after payment.
@@ -235,7 +235,7 @@ export default function CheckoutPage() {
                 <h2 className="text-2xl font-bold text-white mb-6">Order Review</h2>
                 <div className="space-y-4 mb-8">
                   {items.map((item) => (
-                    <div key={item.product._id} className="flex gap-4 p-4 bg-surface-800 rounded-xl">
+                    <div key={item.product._id} className="flex gap-4 p-4 bg-neutral-low rounded-lg">
                       <img
                         src={item.product.coverImage || '/placeholder-book.svg'}
                         alt={item.product.title}
@@ -246,7 +246,7 @@ export default function CheckoutPage() {
                         <p className="text-sm text-surface-400 mb-2">{item.selectedFormat || item.product.format}</p>
                         <div className="flex justify-between mt-auto">
                           <span className="text-surface-300">Qty: {item.quantity}</span>
-                          <span className="font-bold text-brand-400">
+                          <span className="font-bold text-primary">
                             RWF {((item.product.discountPrice ?? item.product.price) * item.quantity).toLocaleString()}
                           </span>
                         </div>
@@ -255,7 +255,7 @@ export default function CheckoutPage() {
                   ))}
                 </div>
                 
-                <div className="grid grid-cols-2 gap-6 p-4 bg-surface-800 rounded-xl">
+                <div className="grid grid-cols-2 gap-6 p-4 bg-neutral-low rounded-lg">
                   <div>
                     <h4 className="font-medium text-surface-300 mb-1">Details</h4>
                     <p className="text-white text-sm">{formData.fullName}</p>
@@ -278,8 +278,8 @@ export default function CheckoutPage() {
                 <h2 className="text-2xl font-bold text-white mb-6">Select Payment Method</h2>
                 
                 <div className="space-y-4">
-                  <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    formData.paymentMethod === 'mtn_momo' ? 'bg-surface-800 border-yellow-500' : 'border-surface-700 hover:bg-surface-800'
+                  <label className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    formData.paymentMethod === 'mtn_momo' ? 'bg-neutral-low border-tertiary' : 'border-neutral-high hover:bg-neutral-low'
                   }`}>
                     <input
                       type="radio"
@@ -299,8 +299,8 @@ export default function CheckoutPage() {
                     {formData.paymentMethod === 'mtn_momo' && <Check className="w-6 h-6 text-yellow-500 ml-auto" />}
                   </label>
 
-                  <label className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    formData.paymentMethod === 'airtel_money' ? 'bg-surface-800 border-red-500' : 'border-surface-700 hover:bg-surface-800'
+                  <label className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    formData.paymentMethod === 'airtel_money' ? 'bg-neutral-low border-error' : 'border-neutral-high hover:bg-neutral-low'
                   }`}>
                     <input
                       type="radio"
@@ -324,7 +324,7 @@ export default function CheckoutPage() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between mt-10 pt-6 border-t border-surface-800">
+            <div className="flex items-center justify-between mt-10 pt-6 border-t border-neutral-low">
               {currentStep > 1 ? (
                 <button
                   onClick={() => setCurrentStep(prev => prev - 1)}
@@ -338,7 +338,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleNext}
                 disabled={createOrder.isPending}
-                className="btn-brand flex items-center gap-2"
+                className="btn-primary flex items-center gap-2"
               >
                 {createOrder.isPending ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -353,7 +353,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary Sidebar */}
           <div className="w-full lg:w-80 shrink-0">
-            <div className="glass-dark p-6 rounded-2xl sticky top-24">
+            <div className="glass-dark p-6 rounded-lg sticky top-24">
               <h3 className="font-bold text-white mb-6">Summary</h3>
               
               <div className="space-y-3 mb-6">
@@ -371,10 +371,10 @@ export default function CheckoutPage() {
                 </div>
               </div>
               
-              <div className="pt-4 border-t border-surface-800">
+              <div className="pt-4 border-t border-neutral-low">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-white">Total</span>
-                  <span className="text-2xl font-bold text-brand-400">RWF {total().toLocaleString()}</span>
+                  <span className="text-2xl font-bold text-primary">RWF {total().toLocaleString()}</span>
                 </div>
                 <p className="text-xs text-surface-500 text-right">Includes VAT</p>
               </div>

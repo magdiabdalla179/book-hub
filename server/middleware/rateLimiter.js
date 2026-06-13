@@ -7,6 +7,7 @@ const createLimiter = (windowMs, max, message) =>
     message: { success: false, message },
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false },
   });
 
 // General API limiter

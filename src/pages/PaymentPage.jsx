@@ -80,7 +80,7 @@ export default function PaymentPage() {
   if (isLoadingOrder) {
     return (
       <div className="min-h-screen page-bg flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
   }
@@ -94,13 +94,13 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen page-bg pt-32 pb-20 flex items-center justify-center p-4">
-      <div className="glass-dark p-8 rounded-2xl w-full max-w-md text-center relative overflow-hidden">
+      <div className="glass-dark p-8 rounded-lg w-full max-w-md text-center relative overflow-hidden">
         
         {/* Decorative background glow based on provider */}
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 blur-[100px] opacity-20 pointer-events-none ${isMtn ? 'bg-yellow-500' : 'bg-red-500'}`} />
 
         <div className="relative z-10">
-          <img src={logoUrl} alt="Provider" className="h-16 mx-auto mb-8 object-contain bg-white rounded-xl p-2" />
+          <img src={logoUrl} alt="Provider" className="h-16 mx-auto mb-8 object-contain bg-white rounded-lg p-2" />
           
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-white mb-2">Complete Payment</h2>
@@ -149,7 +149,7 @@ export default function PaymentPage() {
                   <button onClick={() => navigate('/checkout')} className="btn-outline flex-1">
                     Change Method
                   </button>
-                  <button onClick={() => initiatePayment.mutate()} className={`btn-brand flex-1 ${isMtn ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-500 hover:bg-red-600'}`}>
+                  <button onClick={() => initiatePayment.mutate()} className={`btn-primary flex-1 ${isMtn ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-500 hover:bg-red-600'}`}>
                     Retry
                   </button>
                 </div>

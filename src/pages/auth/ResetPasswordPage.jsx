@@ -41,21 +41,21 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8 animate-fade-in">
           <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
-            <div className="p-2 bg-gradient-brand rounded-xl group-hover:shadow-glow transition-all duration-300">
-              <BookOpen className="w-6 h-6 text-white" />
+            <div className="p-2 bg-gradient-primary rounded-lg transition-all duration-300">
+              <BookOpen className="w-6 h-6 text-on-surface" />
             </div>
-            <span className="text-2xl font-display font-bold text-white">BookHub</span>
+            <span className="text-2xl font-display font-bold text-on-surface">BookHub</span>
           </Link>
-          <h1 className="text-3xl font-display font-bold text-white mb-2">Set New Password</h1>
-          <p className="text-surface-400">Choose a strong password for your account</p>
+          <h1 className="text-3xl font-display font-bold text-on-surface mb-2">Set New Password</h1>
+          <p className="text-on-surface-variant">Choose a strong password for your account</p>
         </div>
 
         <div className="glass-dark p-8 animate-slide-up">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-surface-300 mb-1.5">New Password</label>
+              <label className="block text-sm font-medium text-on-surface mb-1.5">New Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-500" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
                 <input
                   type="password"
                   name="password"
@@ -70,9 +70,9 @@ export default function ResetPasswordPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-surface-300 mb-1.5">Confirm New Password</label>
+              <label className="block text-sm font-medium text-on-surface mb-1.5">Confirm New Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-500" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
                 <input
                   type="password"
                   name="confirmPassword"
@@ -89,7 +89,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-brand w-full mt-6 flex justify-center items-center gap-2"
+              className="btn-primary w-full mt-6 flex justify-center items-center gap-2"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

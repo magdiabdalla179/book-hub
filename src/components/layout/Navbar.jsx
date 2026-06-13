@@ -41,7 +41,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 w-full z-40 transition-all duration-300 ${
-        isScrolled ? 'bg-surface-900/80 backdrop-blur-lg border-b border-surface-700/50 shadow-lg' : 'bg-transparent'
+        isScrolled ? 'bg-neutral/80 backdrop-blur-lg border-b border-neutral-high/50' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,8 +49,8 @@ export default function Navbar() {
           
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="p-2 bg-gradient-brand rounded-xl group-hover:shadow-glow transition-all duration-300">
-              <BookOpen className="w-6 h-6 text-white" />
+            <div className="p-2 bg-gradient-primary rounded-lg transition-all duration-300">
+              <BookOpen className="w-6 h-6 text-on-surface" />
             </div>
             <span className="text-2xl font-display font-bold gradient-text">BookHub</span>
           </Link>
@@ -61,7 +61,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 to={link.path}
-                className="text-surface-300 hover:text-white font-medium transition-colors"
+                className="text-on-surface hover:text-on-surface font-medium transition-colors"
               >
                 {link.name}
               </Link>
@@ -71,19 +71,19 @@ export default function Navbar() {
           {/* Desktop Search & Actions */}
           <div className="hidden md:flex items-center gap-6">
             <form onSubmit={handleSearch} className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
               <input
                 type="text"
                 placeholder="Search books, authors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-surface-800/50 border border-surface-700 rounded-full text-sm text-surface-100 placeholder-surface-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 w-64 transition-all"
+                className="pl-10 pr-4 py-2 bg-neutral-low/50 border border-neutral-high rounded-full text-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all"
               />
             </form>
 
             <button
               onClick={toggleTheme}
-              className="p-2 text-surface-400 hover:text-white transition-colors"
+              className="p-2 text-on-surface-variant hover:text-on-surface transition-colors"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -91,11 +91,11 @@ export default function Navbar() {
 
             <button
               onClick={toggleCart}
-              className="relative p-2 text-surface-400 hover:text-white transition-colors group"
+              className="relative p-2 text-on-surface-variant hover:text-on-surface transition-colors group"
             >
               <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
               {itemCount() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-surface-900">
+                <span className="absolute -top-1 -right-1 bg-primary text-on-surface text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-neutral">
                   {itemCount()}
                 </span>
               )}
@@ -105,9 +105,9 @@ export default function Navbar() {
               <div className="flex items-center gap-4 relative group">
                 <button
                   onClick={() => navigate(isAdmin() ? '/admin' : '/dashboard')}
-                  className="flex items-center gap-2 text-surface-300 hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-on-surface hover:text-on-surface transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full bg-surface-700 flex items-center justify-center overflow-hidden border border-surface-600">
+                  <div className="w-8 h-8 rounded-full bg-neutral-high flex items-center justify-center overflow-hidden border border-outline-variant">
                     {user?.avatar ? (
                       <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
@@ -117,12 +117,12 @@ export default function Navbar() {
                   <span className="text-sm font-medium">{user?.name?.split(' ')[0]}</span>
                 </button>
                 <div className="absolute right-0 top-full mt-2 w-48 glass-dark opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
-                  <Link to={isAdmin() ? '/admin' : '/dashboard'} className="block px-4 py-2 text-sm text-surface-300 hover:text-white hover:bg-surface-700/50">
+                  <Link to={isAdmin() ? '/admin' : '/dashboard'} className="block px-4 py-2 text-sm text-on-surface hover:text-on-surface hover:bg-neutral-high/50">
                     Dashboard
                   </Link>
                   <button
                     onClick={() => { logout(); navigate('/'); }}
-                    className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-error hover:text-error hover:bg-error/10"
                   >
                     <LogOut className="w-4 h-4" /> Logout
                   </button>
@@ -130,10 +130,10 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <Link to="/login" className="text-surface-300 hover:text-white text-sm font-medium transition-colors">
+                <Link to="/login" className="text-on-surface hover:text-on-surface text-sm font-medium transition-colors">
                   Log In
                 </Link>
-                <Link to="/register" className="bg-brand-500 hover:bg-brand-400 text-white text-sm font-medium px-4 py-2 rounded-full transition-colors">
+                <Link to="/register" className="bg-primary hover:bg-primary text-primary-on text-sm font-medium px-4 py-2 rounded-full transition-colors">
                   Sign Up
                 </Link>
               </div>
@@ -144,18 +144,18 @@ export default function Navbar() {
           <div className="md:hidden flex items-center gap-4">
              <button
               onClick={toggleCart}
-              className="relative p-2 text-surface-400 hover:text-white"
+              className="relative p-2 text-on-surface-variant hover:text-on-surface"
             >
               <ShoppingCart className="w-5 h-5" />
               {itemCount() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 -right-1 bg-primary text-on-surface text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                   {itemCount()}
                 </span>
               )}
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-surface-400 hover:text-white"
+              className="p-2 text-on-surface-variant hover:text-on-surface"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -170,17 +170,17 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-surface-900 border-b border-surface-800"
+            className="md:hidden bg-neutral border-b border-neutral-low"
           >
             <div className="px-4 py-6 space-y-4">
               <form onSubmit={handleSearch} className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-surface-100 placeholder-surface-400 focus:outline-none focus:border-brand-500"
+                  className="w-full pl-10 pr-4 py-3 bg-neutral-low border border-neutral-high rounded-lg text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary"
                 />
               </form>
 
@@ -189,16 +189,16 @@ export default function Navbar() {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-lg text-surface-300 hover:text-white font-medium py-2"
+                  className="block text-lg text-on-surface hover:text-on-surface font-medium py-2"
                 >
                   {link.name}
                 </Link>
               ))}
 
-              <div className="pt-4 border-t border-surface-800 flex flex-col gap-4">
+              <div className="pt-4 border-t border-neutral-low flex flex-col gap-4">
                  <button
                   onClick={() => { toggleTheme(); setIsMobileMenuOpen(false); }}
-                  className="flex items-center gap-3 text-surface-300 hover:text-white py-2"
+                      className="flex items-center gap-3 text-on-surface hover:text-on-surface py-2"
                 >
                   {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   {isDark ? 'Light Mode' : 'Dark Mode'}
@@ -209,13 +209,13 @@ export default function Navbar() {
                     <Link
                       to={isAdmin() ? '/admin' : '/dashboard'}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 text-surface-300 hover:text-white py-2"
+                  className="flex items-center gap-3 text-on-surface hover:text-on-surface py-2"
                     >
                       <User className="w-5 h-5" /> Dashboard
                     </Link>
                     <button
                       onClick={() => { logout(); setIsMobileMenuOpen(false); navigate('/'); }}
-                      className="flex items-center gap-3 text-red-400 hover:text-red-300 py-2 w-full text-left"
+                      className="flex items-center gap-3 text-error hover:text-error py-2 w-full text-left"
                     >
                       <LogOut className="w-5 h-5" /> Logout
                     </button>
@@ -232,7 +232,7 @@ export default function Navbar() {
                     <Link
                       to="/register"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="btn-brand text-center"
+                      className="btn-primary text-center"
                     >
                       Sign Up
                     </Link>

@@ -22,8 +22,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20 z-0" />
         
         {/* Animated Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/30 rounded-full blur-[100px] animate-pulse-slow mix-blend-screen z-0" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-500/30 rounded-full blur-[100px] animate-pulse-slow mix-blend-screen z-0" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-[100px] animate-pulse-slow mix-blend-screen z-0" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/30 rounded-full blur-[100px] animate-pulse-slow mix-blend-screen z-0" style={{ animationDelay: '1.5s' }} />
 
         <div className="section-container relative z-10">
           <div className="max-w-3xl">
@@ -32,22 +32,22 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium mb-6">
-                <Sparkles className="w-4 h-4 text-brand-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-on-surface text-sm font-medium mb-6">
+                <Sparkles className="w-4 h-4 text-primary" />
                 AI-Powered Reading Experience
               </div>
-              <h1 className="text-5xl lg:text-7xl font-display font-bold text-white mb-6 leading-tight">
+              <h1 className="text-5xl lg:text-7xl font-display font-bold text-on-surface mb-6 leading-tight">
                 Discover Your Next <br />
                 <span className="gradient-text">Great Adventure.</span>
               </h1>
-              <p className="text-lg text-surface-300 mb-8 max-w-2xl leading-relaxed">
+              <p className="text-lg text-on-surface mb-8 max-w-2xl leading-relaxed">
                 Rwanda's premier online bookstore. Get personalized AI recommendations, buy physical books, and download e-books instantly. Pay securely with MTN MoMo or Airtel Money.
               </p>
               <div className="flex flex-wrap items-center gap-4">
-                <Link to="/books" className="btn-brand flex items-center gap-2">
+                <Link to="/books" className="btn-primary flex items-center gap-2">
                   Browse Books <ArrowRight className="w-5 h-5" />
                 </Link>
-                <Link to="/ai-chat" className="btn-outline border-white/20 text-white hover:bg-white/10 flex items-center gap-2">
+                <Link to="/ai-chat" className="btn-outline border-white/20 text-on-surface hover:bg-white/10 flex items-center gap-2">
                   <Bot className="w-5 h-5" /> Ask AI Assistant
                 </Link>
               </div>
@@ -57,34 +57,34 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 bg-surface-50 dark:bg-surface-900 border-y border-surface-200 dark:border-surface-800 relative z-10">
+      <section className="py-12 bg-inverse-surface/80 dark:bg-neutral border-y border-outline-variant/20 dark:border-neutral-low relative z-10">
         <div className="section-container">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-800 shadow-sm border border-surface-200 dark:border-surface-700">
-              <div className="w-12 h-12 rounded-xl bg-brand-100 dark:bg-brand-500/20 flex items-center justify-center text-brand-600 dark:text-brand-400 shrink-0">
+            <div className="flex items-center gap-4 p-4 rounded-lg bg-white dark:bg-neutral-low shadow-sm border border-outline-variant/20 dark:border-neutral-high">
+              <div className="w-12 h-12 rounded-lg bg-primary/20 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-primary shrink-0">
                 <Sparkles className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-surface-900 dark:text-white">AI Recommendations</h4>
-                <p className="text-sm text-surface-500 dark:text-surface-400">Personalized book picks just for you</p>
+                <h4 className="font-bold text-inverse-on-surface dark:text-on-surface">AI Recommendations</h4>
+                <p className="text-sm text-outline dark:text-on-surface-variant">Personalized book picks just for you</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-800 shadow-sm border border-surface-200 dark:border-surface-700">
-              <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400 shrink-0">
+            <div className="flex items-center gap-4 p-4 rounded-lg bg-white dark:bg-neutral-low shadow-sm border border-outline-variant/20 dark:border-neutral-high">
+              <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-primary/20 flex items-center justify-center text-green-600 dark:text-primary-dim shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-surface-900 dark:text-white">Secure Mobile Money</h4>
-                <p className="text-sm text-surface-500 dark:text-surface-400">Pay with MTN MoMo & Airtel Money</p>
+                <h4 className="font-bold text-inverse-on-surface dark:text-on-surface">Secure Mobile Money</h4>
+                <p className="text-sm text-outline dark:text-on-surface-variant">Pay with MTN MoMo & Airtel Money</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-800 shadow-sm border border-surface-200 dark:border-surface-700">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+            <div className="flex items-center gap-4 p-4 rounded-lg bg-white dark:bg-neutral-low shadow-sm border border-outline-variant/20 dark:border-neutral-high">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-secondary/20 flex items-center justify-center text-blue-600 dark:text-secondary shrink-0">
                 <BookOpen className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="font-bold text-surface-900 dark:text-white">Instant E-Books</h4>
-                <p className="text-sm text-surface-500 dark:text-surface-400">Download and read immediately</p>
+                <h4 className="font-bold text-inverse-on-surface dark:text-on-surface">Instant E-Books</h4>
+                <p className="text-sm text-outline dark:text-on-surface-variant">Download and read immediately</p>
               </div>
             </div>
           </div>
@@ -95,12 +95,12 @@ export default function HomePage() {
       <section className="py-20 section-container">
         <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-3xl font-display font-bold text-surface-900 dark:text-white flex items-center gap-2">
-              <TrendingUp className="w-8 h-8 text-brand-500" /> Bestsellers
+            <h2 className="text-3xl font-display font-bold text-inverse-on-surface dark:text-on-surface flex items-center gap-2">
+              <TrendingUp className="w-8 h-8 text-primary" /> Bestsellers
             </h2>
-            <p className="text-surface-500 dark:text-surface-400 mt-2">What everyone is reading right now.</p>
+            <p className="text-outline dark:text-on-surface-variant mt-2">What everyone is reading right now.</p>
           </div>
-          <Link to="/books?sort=-salesCount" className="text-brand-500 hover:text-brand-600 font-medium flex items-center gap-1">
+          <Link to="/books?sort=-salesCount" className="text-primary hover:text-primary-dim font-medium flex items-center gap-1">
             View All <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -121,14 +121,14 @@ export default function HomePage() {
       </section>
 
       {/* New Arrivals */}
-      <section className="py-20 bg-surface-50 dark:bg-surface-800/50">
+      <section className="py-20 bg-inverse-surface/80 dark:bg-neutral-low/50">
         <div className="section-container">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-display font-bold text-surface-900 dark:text-white">New Arrivals</h2>
-              <p className="text-surface-500 dark:text-surface-400 mt-2">Fresh off the press.</p>
+              <h2 className="text-3xl font-display font-bold text-inverse-on-surface dark:text-on-surface">New Arrivals</h2>
+              <p className="text-outline dark:text-on-surface-variant mt-2">Fresh off the press.</p>
             </div>
-            <Link to="/books?sort=-createdAt" className="text-brand-500 hover:text-brand-600 font-medium flex items-center gap-1">
+            <Link to="/books?sort=-createdAt" className="text-primary hover:text-primary-dim font-medium flex items-center gap-1">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

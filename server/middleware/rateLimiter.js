@@ -20,7 +20,7 @@ const apiLimiter = createLimiter(
 // Auth limiter (stricter)
 const authLimiter = createLimiter(
   15 * 60 * 1000,
-  10,
+  30,
   'Too many login attempts, please try again after 15 minutes.'
 );
 

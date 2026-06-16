@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Github, Twitter, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { BookOpen, Mail, MapPin, Phone } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -18,17 +18,7 @@ export default function Footer() {
             <p className="text-on-surface-variant text-sm leading-relaxed">
               Rwanda's premier online bookstore. Discover your next great read with AI-powered recommendations and seamless mobile money payments.
             </p>
-            <div className="flex gap-4 pt-2">
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-                <Github className="w-5 h-5" />
-              </a>
-            </div>
+
           </div>
 
           {/* Quick Links */}

@@ -75,7 +75,17 @@ const generateResponse = async (message, history = []) => {
   }
 };
 
+const callAIWithTimeout = (promise, ms = 15000) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`AI request timed out after ${ms}ms`)), ms)),
+  ]);
+
 const generateBookSummary = async (book) => {
+  if (!book || !book.description) {
+    return 'No description available to generate a summary.';
+  }
+
   const prompt = `Generate a compelling 150-200 word summary for the following book. 
 Write it in an engaging way that would make readers want to buy it.
 
@@ -91,20 +101,28 @@ Summary:`;
     return book.description.substring(0, 300) + '...';
   }
 
-  if (ai.type === 'gemini') {
-    const model = ai.client.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt);
-    return result.response.text();
+  try {
+    if (ai.type === 'gemini') {
+      const model = ai.client.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const result = await callAIWithTimeout(model.generateContent(prompt));
+      return result.response.text();
+    }
+
+    if (ai.type === 'openai') {
+      const completion = await callAIWithTimeout(
+        ai.client.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 400,
+        })
+      );
+      return completion.choices[0].message.content;
+    }
+  } catch (err) {
+    console.error('AI summary generation failed:', err.message);
   }
 
-  if (ai.type === 'openai') {
-    const completion = await ai.client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 400,
-    });
-    return completion.choices[0].message.content;
-  }
+  return book.description.substring(0, 300) + '...';
 };
 
 const generateRecommendations = async ({ purchaseHistory = [], favoriteCategories = [], searchHistory = [] }) => {

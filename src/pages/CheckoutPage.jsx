@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Check, ChevronRight, User, MapPin, CreditCard, ShoppingBag, Loader2, Search } from 'lucide-react';
@@ -20,30 +20,31 @@ function StripeCardForm({ orderId, amount, onPaid, onError }) {
   useEffect(() => {
     let cancelled = false;
 
-    import('@stripe/stripe-js').then(async ({ loadStripe }) => {
-      if (cancelled) return;
-      const { data } = await api.get('/payments/config/stripe');
-      if (cancelled) return;
-      const instance = await loadStripe(data.publishableKey);
-      if (cancelled) return;
-      setStripe(instance);
-    });
+    (async () => {
+      try {
+        const { data } = await api.get('/payments/config/stripe');
+        if (cancelled) return;
+        const { loadStripe } = await import('@stripe/stripe-js');
+        if (cancelled) return;
+        const instance = await loadStripe(data.publishableKey);
+        if (cancelled) return;
+        setStripe(instance);
 
-    import('@stripe/react-stripe-js').then((mod) => {
-      if (cancelled) return;
-      setElements(() => mod.Elements);
-      setCardElement(() => mod.CardElement);
-      setLoading(false);
-    });
+        const mod = await import('@stripe/react-stripe-js');
+        if (cancelled) return;
+        setElements(() => mod.Elements);
+        setCardElement(() => mod.CardElement);
+        setLoading(false);
 
-    api.post('/payments/stripe/create-intent', { orderId, amount }).then(({ data }) => {
-      if (!cancelled) setClientSecret(data.clientSecret);
-    }).catch((err) => {
-      if (!cancelled) {
-        setError(err.response?.data?.message || 'Failed to initialize payment');
+        const intentRes = await api.post('/payments/stripe/create-intent', { orderId, amount });
+        if (cancelled) return;
+        setClientSecret(intentRes.data.clientSecret);
+      } catch (err) {
+        if (cancelled) return;
+        setError(err.response?.data?.message || err.message || 'Failed to load payment');
         setLoading(false);
       }
-    });
+    })();
 
     return () => { cancelled = true; };
   }, [orderId, amount]);
@@ -62,7 +63,8 @@ function StripeCardForm({ orderId, amount, onPaid, onError }) {
     }
 
     try {
-      const { data } = await api.post('/payments/stripe/confirm', { paymentIntentId: clientSecret.split('_secret_')[0] });
+      const piId = clientSecret.split('_secret_')[0];
+      const { data } = await api.post('/payments/stripe/confirm', { paymentIntentId: piId });
       if (data.status === 'successful') {
         onPaid();
       } else {
@@ -141,8 +143,6 @@ export default function CheckoutPage() {
     paymentMethod: 'mtn_momo',
   });
   const [stripeOrderId, setStripeOrderId] = useState(null);
-  const [stripeProcessing, setStripeProcessing] = useState(false);
-  const [stripePaid, setStripePaid] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -155,7 +155,6 @@ export default function CheckoutPage() {
         quantity: item.quantity,
         format: item.selectedFormat || item.product.format,
       }));
-
       const { data } = await api.post('/orders', {
         items: orderItems,
         shippingAddress: {
@@ -170,13 +169,11 @@ export default function CheckoutPage() {
         notes: formData.notes,
         paymentMethod: formData.paymentMethod,
       });
-
       return data;
     },
     onSuccess: (data) => {
       if (formData.paymentMethod === 'stripe') {
         setStripeOrderId(data.data._id);
-        setStripeProcessing(true);
       } else {
         clearCart();
         navigate(`/payment/${data.data._id}`);
@@ -185,7 +182,7 @@ export default function CheckoutPage() {
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Failed to create order');
     },
-  };
+  });
 
   const handleNext = () => {
     if (currentStep === 1) {
@@ -221,7 +218,6 @@ export default function CheckoutPage() {
     <div className="min-h-screen page-bg pt-24 pb-20">
       <div className="section-container max-w-5xl">
 
-        {/* Progress Bar */}
         <div className="mb-12">
           <div className="flex items-center justify-between relative">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-neutral-low rounded-full z-0" />
@@ -229,12 +225,10 @@ export default function CheckoutPage() {
               className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full z-0 transition-all duration-500"
               style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
             />
-
             {steps.map((step) => {
               const Icon = step.icon;
               const isActive = currentStep === step.num;
               const isPast = currentStep > step.num;
-
               return (
                 <div key={step.num} className="relative z-10 flex flex-col items-center gap-2">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors ${
@@ -256,63 +250,36 @@ export default function CheckoutPage() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1 glass-dark p-8 rounded-lg">
 
-            {/* Step 1: Details */}
             {currentStep === 1 && (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="text-2xl font-bold text-white mb-6">Personal Details</h2>
                 <div>
                   <label className="block text-sm font-medium text-surface-300 mb-1.5">Full Name</label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="input-field"
-                    placeholder="John Doe"
-                  />
+                  <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="input-field" placeholder="John Doe" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-surface-300 mb-1.5">Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="input-field"
-                    placeholder="078..."
-                  />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input-field" placeholder="078..." />
                 </div>
               </div>
             )}
 
-            {/* Step 2: Shipping */}
             {currentStep === 2 && (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="text-2xl font-bold text-white mb-6">Shipping Address</h2>
                 {!needsShipping ? (
                   <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                     <p className="text-blue-400 font-medium">Digital order only!</p>
-                    <p className="text-surface-300 text-sm mt-1">
-                      Your order contains only e-books. No physical shipping address is required.
-                    </p>
+                    <p className="text-surface-300 text-sm mt-1">Your order contains only e-books. No physical shipping address is required.</p>
                   </div>
                 ) : (
                   <>
                     <div>
                       <label className="block text-sm font-medium text-surface-300 mb-1.5">Street Address</label>
-                      <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        className="input-field"
-                        placeholder="KG 7 Ave, KG 123 St"
-                      />
+                      <input type="text" name="address" value={formData.address} onChange={handleChange} className="input-field" placeholder="KG 7 Ave, KG 123 St" />
                     </div>
-
                     <div>
                       <label className="block text-sm font-medium text-surface-300 mb-3">Select Province & District</label>
                       <div className="flex flex-wrap gap-2 mb-4">
@@ -322,45 +289,35 @@ export default function CheckoutPage() {
                             type="button"
                             onClick={() => setFormData({ ...formData, province: formData.province === p.name ? '' : p.name, city: '' })}
                             className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
-                              formData.province === p.name
-                                ? provinceColors[p.name] + ' border-2'
-                                : 'bg-neutral-low border-neutral-high text-surface-300 hover:border-outline'
+                              formData.province === p.name ? provinceColors[p.name] + ' border-2' : 'bg-neutral-low border-neutral-high text-surface-300 hover:border-outline'
                             }`}
                           >
                             {p.name}
                           </button>
                         ))}
                       </div>
-
                       {formData.province && (
                         <div className={`rounded-lg p-4 border ${provinceBgMap[formData.province]} border-neutral-high`}>
                           <div className="flex items-center gap-2 mb-3">
                             <MapPin className="w-4 h-4 text-primary" />
-                            <span className="text-sm text-surface-300 font-medium">
-                              Select district in <span className="text-white">{formData.province}</span>
-                            </span>
+                            <span className="text-sm text-surface-300 font-medium">Select district in <span className="text-white">{formData.province}</span></span>
                           </div>
                           <div className="flex flex-wrap gap-2">
-                            {provinces
-                              .find((p) => p.name === formData.province)
-                              ?.districts.map((d) => (
-                                <button
-                                  key={d}
-                                  type="button"
-                                  onClick={() => setFormData({ ...formData, city: d })}
-                                  className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
-                                    formData.city === d
-                                      ? 'bg-primary border-primary text-primary-on'
-                                      : 'bg-neutral border-neutral-high text-surface-300 hover:border-outline hover:text-white'
-                                  }`}
-                                >
-                                  {d}
-                                </button>
-                              ))}
+                            {provinces.find((p) => p.name === formData.province)?.districts.map((d) => (
+                              <button
+                                key={d}
+                                type="button"
+                                onClick={() => setFormData({ ...formData, city: d })}
+                                className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
+                                  formData.city === d ? 'bg-primary border-primary text-primary-on' : 'bg-neutral border-neutral-high text-surface-300 hover:border-outline hover:text-white'
+                                }`}
+                              >
+                                {d}
+                              </button>
+                            ))}
                           </div>
                         </div>
                       )}
-
                       {!formData.province && (
                         <div className="flex items-center gap-3 p-4 bg-neutral-low rounded-lg border border-neutral-high">
                           <Search className="w-5 h-5 text-outline shrink-0" />
@@ -379,48 +336,33 @@ export default function CheckoutPage() {
                         </div>
                       )}
                     </div>
-
                     <div>
                       <label className="block text-sm font-medium text-surface-300 mb-1.5">Delivery Notes (Optional)</label>
-                      <textarea
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        className="input-field min-h-[100px] resize-y"
-                        placeholder="Any special instructions for delivery?"
-                      />
+                      <textarea name="notes" value={formData.notes} onChange={handleChange} className="input-field min-h-[100px] resize-y" placeholder="Any special instructions for delivery?" />
                     </div>
                   </>
                 )}
               </div>
             )}
 
-            {/* Step 3: Review */}
             {currentStep === 3 && (
               <div className="animate-fade-in">
                 <h2 className="text-2xl font-bold text-white mb-6">Order Review</h2>
                 <div className="space-y-4 mb-8">
                   {items.map((item) => (
                     <div key={item.product._id} className="flex gap-4 p-4 bg-neutral-low rounded-lg">
-                      <img
-                        src={item.product.coverImage || '/placeholder-book.svg'}
-                        alt={item.product.title}
-                        className="w-16 h-24 object-cover rounded-lg"
-                      />
+                      <img src={item.product.coverImage || '/placeholder-book.svg'} alt={item.product.title} className="w-16 h-24 object-cover rounded-lg" />
                       <div className="flex-1">
                         <h4 className="font-medium text-white">{item.product.title}</h4>
                         <p className="text-sm text-surface-400 mb-2">{item.selectedFormat || item.product.format}</p>
                         <div className="flex justify-between mt-auto">
                           <span className="text-surface-300">Qty: {item.quantity}</span>
-                          <span className="font-bold text-primary">
-                            RWF {((item.product.discountPrice ?? item.product.price) * item.quantity).toLocaleString()}
-                          </span>
+                          <span className="font-bold text-primary">RWF {((item.product.discountPrice ?? item.product.price) * item.quantity).toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-
                 <div className="grid grid-cols-2 gap-6 p-4 bg-neutral-low rounded-lg">
                   <div>
                     <h4 className="font-medium text-surface-300 mb-1">Details</h4>
@@ -438,11 +380,9 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* Step 4: Payment Method */}
             {currentStep === 4 && (
               <div className="animate-fade-in">
                 <h2 className="text-2xl font-bold text-white mb-6">Select Payment Method</h2>
-
                 <div className="space-y-4">
                   <label className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                     formData.paymentMethod === 'mtn_momo' ? 'bg-neutral-low border-tertiary' : 'border-neutral-high hover:bg-neutral-low'
@@ -497,27 +437,21 @@ export default function CheckoutPage() {
                     }}
                     onError={(msg) => {
                       toast.error(msg || 'Payment failed');
-                      setStripeProcessing(false);
                     }}
                   />
                 )}
               </div>
             )}
 
-            {/* Navigation Buttons */}
             <div className="flex items-center justify-between mt-10 pt-6 border-t border-neutral-low">
-              {currentStep > 1 ? (
+              {currentStep > 1 && !stripeOrderId ? (
                 <button onClick={() => setCurrentStep((prev) => prev - 1)} className="btn-ghost" disabled={createOrder.isPending}>
                   Back
                 </button>
               ) : <div />}
 
               {!stripeOrderId && (
-                <button
-                  onClick={handleNext}
-                  disabled={createOrder.isPending}
-                  className="btn-primary flex items-center gap-2"
-                >
+                <button onClick={handleNext} disabled={createOrder.isPending} className="btn-primary flex items-center gap-2">
                   {createOrder.isPending ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : currentStep === 4 ? (
@@ -530,11 +464,9 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Order Summary Sidebar */}
           <div className="w-full lg:w-80 shrink-0">
             <div className="glass-dark p-6 rounded-lg sticky top-24">
               <h3 className="font-bold text-white mb-6">Summary</h3>
-
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm text-surface-300">
                   <span>Items ({items.length})</span>
@@ -549,7 +481,6 @@ export default function CheckoutPage() {
                   <span>RWF {tax().toLocaleString()}</span>
                 </div>
               </div>
-
               <div className="pt-4 border-t border-neutral-low">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-white">Total</span>

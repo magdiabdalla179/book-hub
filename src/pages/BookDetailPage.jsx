@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ShoppingBag, Star, Sparkles, BookOpen, User, Plus, Minus, Heart, Package, Download, CheckCircle, XCircle } from 'lucide-react';
+import { ShoppingBag, Star, Sparkles, BookOpen, User, Plus, Minus, Heart, Package, Download, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 
 function FormatBadge({ format }) {

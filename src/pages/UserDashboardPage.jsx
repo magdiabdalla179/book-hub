@@ -187,13 +187,23 @@ export default function UserDashboardPage() {
                       </div>
                       <div className="p-4">
                         {order.items.map((item) => (
-                          <div key={item._id} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0 border-b border-neutral-high/50 last:border-0">
+                          <div key={item._id || item.product} className="flex items-center gap-4 py-3 first:pt-0 last:pb-0 border-b border-neutral-high/50 last:border-0">
                             <img src={item.coverImage} alt={item.title} className="w-12 h-16 object-cover rounded shadow" />
                             <div className="flex-1">
                               <h4 className="font-medium text-white text-sm line-clamp-1">{item.title}</h4>
                               <p className="text-xs text-surface-400">{item.format} • Qty: {item.quantity}</p>
                             </div>
-                            <span className="text-white text-sm font-medium">RWF {item.subtotal.toLocaleString()}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-white text-sm font-medium">RWF {item.subtotal.toLocaleString()}</span>
+                              {order.orderStatus === 'delivered' && (
+                                <Link
+                                  to={`/books/${item.product}`}
+                                  className="text-xs text-primary hover:text-primary-dim underline whitespace-nowrap"
+                                >
+                                  Write Review
+                                </Link>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>

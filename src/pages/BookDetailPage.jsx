@@ -36,6 +36,9 @@ export default function BookDetailPage() {
   const { isAuthenticated } = useAuthStore();
   const queryClient = useQueryClient();
   const [selectedFormat, setSelectedFormat] = useState('physical');
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewTitle, setReviewTitle] = useState('');
+  const [reviewComment, setReviewComment] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['product', id],
@@ -72,6 +75,31 @@ export default function BookDetailPage() {
       queryClient.invalidateQueries(['wishlist']);
     },
     onError: () => toast.error('Please log in to add to wishlist')
+  });
+
+  const submitReview = useMutation({
+    mutationFn: async () => {
+      const { data } = await api.post(`/products/${id}/reviews`, {
+        rating: reviewRating,
+        title: reviewTitle,
+        comment: reviewComment,
+      });
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('Review submitted!');
+      setReviewRating(5);
+      setReviewTitle('');
+      setReviewComment('');
+      queryClient.invalidateQueries(['reviews', id]);
+    },
+    onError: (err) => {
+      if (err.response?.status === 409) {
+        toast.error('You have already reviewed this book.');
+      } else {
+        toast.error('Failed to submit review. Please try again.');
+      }
+    },
   });
 
   if (isLoading) {
@@ -368,6 +396,46 @@ export default function BookDetailPage() {
                   <p className="text-on-surface text-sm leading-relaxed">{review.comment}</p>
                 </div>
               ))}
+            </div>
+          )}
+
+          {isAuthenticated && (
+            <div className="glass-dark p-8 rounded-lg mt-8 max-w-2xl">
+              <h3 className="text-xl font-semibold text-on-surface mb-6">Write a Review</h3>
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-on-surface mb-2">Rating</label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button key={star} type="button" onClick={() => setReviewRating(star)}>
+                        <Star className={`w-8 h-8 transition-colors ${star <= reviewRating ? 'fill-tertiary text-tertiary' : 'text-neutral-high'}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface mb-2">Title (optional)</label>
+                  <input
+                    type="text" value={reviewTitle} onChange={(e) => setReviewTitle(e.target.value)}
+                    className="input-field" placeholder="Summarize your review" maxLength={100}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface mb-2">Comment</label>
+                  <textarea
+                    value={reviewComment} onChange={(e) => setReviewComment(e.target.value)}
+                    className="input-field min-h-[120px]" placeholder="What did you think of this book?"
+                    required
+                  />
+                </div>
+                <button
+                  onClick={() => submitReview.mutate()}
+                  disabled={!reviewComment.trim() || submitReview.isPending}
+                  className="btn-primary px-8"
+                >
+                  {submitReview.isPending ? 'Submitting...' : 'Submit Review'}
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -24,12 +24,16 @@ const Payment = sequelize.define('Payment', {
     defaultValue: 'RWF',
   },
   paymentMethod: {
-    type: DataTypes.ENUM('mtn_momo', 'airtel_money', 'card', 'cod'),
+    type: DataTypes.ENUM('mtn_momo', 'airtel_money', 'stripe', 'card', 'cod'),
     allowNull: false,
   },
   transactionId: {
     type: DataTypes.STRING,
     unique: true,
+    allowNull: true,
+  },
+  stripePaymentIntentId: {
+    type: DataTypes.STRING,
     allowNull: true,
   },
   providerReferenceId: {

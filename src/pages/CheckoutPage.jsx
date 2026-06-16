@@ -365,6 +365,27 @@ export default function CheckoutPage() {
                     </div>
                     {formData.paymentMethod === 'airtel_money' && <Check className="w-6 h-6 text-red-500 ml-auto" />}
                   </label>
+
+                  <label className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    formData.paymentMethod === 'stripe' ? 'bg-neutral-low border-primary' : 'border-neutral-high hover:bg-neutral-low'
+                  }`}>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="stripe"
+                      checked={formData.paymentMethod === 'stripe'}
+                      onChange={handleChange}
+                      className="hidden"
+                    />
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shrink-0">
+                      <CreditCard className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white">Credit / Debit Card</h4>
+                      <p className="text-sm text-surface-400">Pay securely with Visa, Mastercard, or Amex</p>
+                    </div>
+                    {formData.paymentMethod === 'stripe' && <Check className="w-6 h-6 text-indigo-500 ml-auto" />}
+                  </label>
                 </div>
               </div>
             )}

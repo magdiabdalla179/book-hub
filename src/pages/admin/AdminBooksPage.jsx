@@ -127,7 +127,7 @@ export default function AdminBooksPage() {
                 </tr>
               ) : (
                 productsData?.data.map((book) => (
-                  <tr key={book._id} className="hover:bg-neutral-low/30 transition-colors">
+                    <tr key={book.id} className="hover:bg-neutral-low/30 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <img src={book.coverImage || '/placeholder-book.svg'} alt="" className="w-10 h-14 object-cover rounded shadow" />
@@ -162,7 +162,7 @@ export default function AdminBooksPage() {
                         </button>
                         <button 
                           onClick={() => {
-                            if(window.confirm(`Delete "${book.title}"?`)) deleteProduct.mutate(book._id);
+                            if(window.confirm(`Delete "${book.title}"?`)) deleteProduct.mutate(book.id);
                           }}
                           disabled={deleteProduct.isPending}
                           className="p-1.5 text-on-surface-variant hover:text-red-400 hover:bg-red-400/10 rounded transition-colors"
@@ -236,7 +236,7 @@ function ProductFormModal({ categories, editingBook, onClose, onSuccess }) {
         author: editingBook.author || '',
         isbn: editingBook.isbn || '',
         description: editingBook.description || '',
-        category: editingBook.category?._id || editingBook.category || '',
+        category: editingBook.category?.id || editingBook.categoryId || '',
         price: editingBook.price?.toString() || '',
         discountPrice: editingBook.discountPrice?.toString() || '',
         format: editingBook.format || 'physical',
@@ -261,7 +261,7 @@ function ProductFormModal({ categories, editingBook, onClose, onSuccess }) {
   const createProduct = useMutation({
     mutationFn: async (formData) => {
       if (isEditing) {
-        const { data } = await api.put(`/products/${editingBook._id}`, formData, {
+        const { data } = await api.put(`/products/${editingBook.id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         return data;
@@ -415,7 +415,7 @@ function ProductFormModal({ categories, editingBook, onClose, onSuccess }) {
                   <select name="category" value={form.category} onChange={handleChange} className="input-field">
                     <option value="">Select category</option>
                     {categories.map((c) => (
-                      <option key={c._id} value={c._id}>{c.name}</option>
+                      <option key={c.id || c._id} value={c.id || c._id}>{c.name}</option>
                     ))}
                   </select>
                   <FieldError name="category" />
@@ -556,7 +556,7 @@ function ProductFormModal({ categories, editingBook, onClose, onSuccess }) {
                   <div><span className="text-on-surface-variant">Author:</span> <span className="text-on-surface">{form.author}</span></div>
                   <div><span className="text-on-surface-variant">ISBN:</span> <span className="text-on-surface">{form.isbn || 'N/A'}</span></div>
                   <div><span className="text-on-surface-variant">Price:</span> <span className="text-on-surface">RWF {Number(form.price).toLocaleString()}</span></div>
-                  <div><span className="text-on-surface-variant">Category:</span> <span className="text-on-surface">{categories.find(c => c._id === form.category)?.name || 'N/A'}</span></div>
+                  <div><span className="text-on-surface-variant">Category:</span> <span className="text-on-surface">{categories.find(c => (c.id || c._id) === form.category)?.name || 'N/A'}</span></div>
                 </div>
               </div>
               <div className="glass-dark p-5 rounded-lg border border-neutral-high">

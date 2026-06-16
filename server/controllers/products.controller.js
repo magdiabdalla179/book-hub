@@ -85,10 +85,14 @@ const getAdminProducts = asyncHandler(async (req, res) => {
     where.isActive = req.query.isActive === 'true';
   }
 
+  if (req.query.isActive === undefined) {
+    where.isActive = true;
+  }
+
   const [products, total] = await Promise.all([
     Product.findAll({
       where,
-      include: [{ model: Category, as: 'category', attributes: ['name', 'slug'] }],
+      include: [{ model: Category, as: 'category', attributes: ['id', 'name', 'slug'] }],
       order: [[req.query.sort?.replace('-', '') || 'createdAt', req.query.sort?.startsWith('-') ? 'DESC' : 'ASC']],
       offset: skip,
       limit,

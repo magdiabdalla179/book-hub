@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Check, ChevronRight, User, MapPin, CreditCard, ShoppingBag, Loader2, Search } from 'lucide-react';
@@ -7,123 +7,6 @@ import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { provinces, allDistricts, provinceColors, provinceBgMap } from '../data/rwanda';
-
-function StripeCardForm({ orderId, amount, onPaid, onError }) {
-  const [stripe, setStripe] = useState(null);
-  const [CardElement, setCardElement] = useState(null);
-  const [Elements, setElements] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [paying, setPaying] = useState(false);
-  const [clientSecret, setClientSecret] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      try {
-        const { data } = await api.get('/payments/config/stripe');
-        if (cancelled) return;
-        const { loadStripe } = await import('@stripe/stripe-js');
-        if (cancelled) return;
-        const instance = await loadStripe(data.publishableKey);
-        if (cancelled) return;
-        setStripe(instance);
-
-        const mod = await import('@stripe/react-stripe-js');
-        if (cancelled) return;
-        setElements(() => mod.Elements);
-        setCardElement(() => mod.CardElement);
-        setLoading(false);
-
-        const intentRes = await api.post('/payments/stripe/create-intent', { orderId, amount });
-        if (cancelled) return;
-        setClientSecret(intentRes.data.clientSecret);
-      } catch (err) {
-        if (cancelled) return;
-        setError(err.response?.data?.message || err.message || 'Failed to load payment');
-        setLoading(false);
-      }
-    })();
-
-    return () => { cancelled = true; };
-  }, [orderId, amount]);
-
-  const handlePay = async () => {
-    if (!stripe || !clientSecret) return;
-    setPaying(true);
-    setError(null);
-
-    const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
-
-    if (confirmError) {
-      setError(confirmError.message);
-      setPaying(false);
-      return;
-    }
-
-    try {
-      const piId = clientSecret.split('_secret_')[0];
-      const { data } = await api.post('/payments/stripe/confirm', { paymentIntentId: piId });
-      if (data.status === 'successful') {
-        onPaid();
-      } else {
-        setError('Payment was not successful. Please try again.');
-        setPaying(false);
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to confirm payment');
-      setPaying(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 text-surface-500 animate-spin" /></div>;
-  }
-
-  if (!Elements || !CardElement || !stripe) {
-    return <p className="text-error text-sm text-center py-4">Failed to load payment form. Try refreshing.</p>;
-  }
-
-  const CardInput = CardElement;
-
-  return (
-    <Elements stripe={stripe}>
-      <div className="space-y-4 mt-6 pt-6 border-t border-neutral-high">
-        <h3 className="text-lg font-semibold text-white">Enter Card Details</h3>
-        <div className="bg-neutral-low rounded-lg p-4 border border-neutral-high">
-          <CardInput
-            options={{
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#dfe8de',
-                  '::placeholder': { color: '#6b8c6b' },
-                },
-                invalid: { color: '#ef4444' },
-              },
-            }}
-            onChange={(e) => {
-              if (e.error) setError(e.error.message);
-              else setError(null);
-            }}
-          />
-        </div>
-        {error && <p className="text-error text-sm">{error}</p>}
-        <button
-          type="button"
-          disabled={paying || !clientSecret}
-          onClick={handlePay}
-          className="btn-primary w-full flex items-center justify-center gap-2"
-        >
-          {paying ? <Loader2 className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
-          {paying ? 'Processing...' : `Pay RWF ${Number(amount || 0).toLocaleString()}`}
-        </button>
-        <p className="text-xs text-surface-500 text-center">Secured by Stripe</p>
-      </div>
-    </Elements>
-  );
-}
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -142,7 +25,6 @@ export default function CheckoutPage() {
     notes: '',
     paymentMethod: 'mtn_momo',
   });
-  const [stripeOrderId, setStripeOrderId] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -172,12 +54,8 @@ export default function CheckoutPage() {
       return data;
     },
     onSuccess: (data) => {
-      if (formData.paymentMethod === 'stripe') {
-        setStripeOrderId(data.data._id);
-      } else {
-        clearCart();
-        navigate(`/payment/${data.data._id}`);
-      }
+      clearCart();
+      navigate(`/payment/${data.data.id}`);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Failed to create order');
@@ -411,56 +289,26 @@ export default function CheckoutPage() {
                     </div>
                     {formData.paymentMethod === 'airtel_money' && <Check className="w-6 h-6 text-red-500 ml-auto" />}
                   </label>
-
-                  <label className={`flex items-center gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                    formData.paymentMethod === 'stripe' ? 'bg-neutral-low border-primary' : 'border-neutral-high hover:bg-neutral-low'
-                  }`}>
-                    <input type="radio" name="paymentMethod" value="stripe" checked={formData.paymentMethod === 'stripe'} onChange={handleChange} className="hidden" />
-                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shrink-0">
-                      <CreditCard className="w-6 h-6 text-indigo-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white">Credit / Debit Card</h4>
-                      <p className="text-sm text-surface-400">Pay securely with Visa, Mastercard, or Amex</p>
-                    </div>
-                    {formData.paymentMethod === 'stripe' && <Check className="w-6 h-6 text-indigo-500 ml-auto" />}
-                  </label>
                 </div>
-
-                {stripeOrderId && (
-                  <StripeCardForm
-                    orderId={stripeOrderId}
-                    amount={total()}
-                    onPaid={() => {
-                      clearCart();
-                      navigate(`/order-confirmation/${stripeOrderId}`);
-                    }}
-                    onError={(msg) => {
-                      toast.error(msg || 'Payment failed');
-                    }}
-                  />
-                )}
               </div>
             )}
 
             <div className="flex items-center justify-between mt-10 pt-6 border-t border-neutral-low">
-              {currentStep > 1 && !stripeOrderId ? (
+              {currentStep > 1 ? (
                 <button onClick={() => setCurrentStep((prev) => prev - 1)} className="btn-ghost" disabled={createOrder.isPending}>
                   Back
                 </button>
               ) : <div />}
 
-              {!stripeOrderId && (
-                <button onClick={handleNext} disabled={createOrder.isPending} className="btn-primary flex items-center gap-2">
-                  {createOrder.isPending ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : currentStep === 4 ? (
-                    'Place Order'
-                  ) : (
-                    <>Continue <ChevronRight className="w-5 h-5" /></>
-                  )}
-                </button>
-              )}
+              <button onClick={handleNext} disabled={createOrder.isPending} className="btn-primary flex items-center gap-2">
+                {createOrder.isPending ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : currentStep === 4 ? (
+                  'Place Order'
+                ) : (
+                  <>Continue <ChevronRight className="w-5 h-5" /></>
+                )}
+              </button>
             </div>
           </div>
 

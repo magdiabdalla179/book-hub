@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { Check, ChevronRight, User, MapPin, CreditCard, ShoppingBag, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, User, MapPin, CreditCard, ShoppingBag, Loader2, Search } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
+import { provinces, allDistricts, provinceColors, provinceBgMap } from '../data/rwanda';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -188,32 +189,77 @@ export default function CheckoutPage() {
                         value={formData.address}
                         onChange={handleChange}
                         className="input-field"
-                        placeholder="KG 7 Ave"
+                        placeholder="KG 7 Ave,  KG 123 St"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-surface-300 mb-1.5">City/District</label>
-                        <input
-                          type="text"
-                          name="city"
-                          value={formData.city}
-                          onChange={handleChange}
-                          className="input-field"
-                          placeholder="Kigali"
-                        />
+
+                    <div>
+                      <label className="block text-sm font-medium text-surface-300 mb-3">Select Province & District</label>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {provinces.map((p) => (
+                          <button
+                            key={p.name}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, province: formData.province === p.name ? '' : p.name, city: '' })}
+                            className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                              formData.province === p.name
+                                ? provinceColors[p.name] + ' border-2'
+                                : 'bg-neutral-low border-neutral-high text-surface-300 hover:border-outline'
+                            }`}
+                          >
+                            {p.name}
+                          </button>
+                        ))}
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-surface-300 mb-1.5">Province (Optional)</label>
-                        <input
-                          type="text"
-                          name="province"
-                          value={formData.province}
-                          onChange={handleChange}
-                          className="input-field"
-                        />
-                      </div>
+
+                      {formData.province && (
+                        <div className={`rounded-lg p-4 border ${provinceBgMap[formData.province]} border-neutral-high`}>
+                          <div className="flex items-center gap-2 mb-3">
+                            <MapPin className="w-4 h-4 text-primary" />
+                            <span className="text-sm text-surface-300 font-medium">
+                              Select district in <span className="text-white">{formData.province}</span>
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {provinces
+                              .find((p) => p.name === formData.province)
+                              ?.districts.map((d) => (
+                                <button
+                                  key={d}
+                                  type="button"
+                                  onClick={() => setFormData({ ...formData, city: d })}
+                                  className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
+                                    formData.city === d
+                                      ? 'bg-primary border-primary text-primary-on'
+                                      : 'bg-neutral border-neutral-high text-surface-300 hover:border-outline hover:text-white'
+                                  }`}
+                                >
+                                  {d}
+                                </button>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {!formData.province && (
+                        <div className="flex items-center gap-3 p-4 bg-neutral-low rounded-lg border border-neutral-high">
+                          <Search className="w-5 h-5 text-outline shrink-0" />
+                          <input
+                            type="text"
+                            placeholder="Search for a district..."
+                            className="bg-transparent border-none outline-none text-white text-sm flex-1 placeholder:text-outline"
+                            onChange={(e) => {
+                              const q = e.target.value.toLowerCase();
+                              const match = allDistricts.find((d) => d.district.toLowerCase().includes(q));
+                              if (match && q.length > 0) {
+                                setFormData({ ...formData, province: match.province, city: match.district });
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
+
                     <div>
                       <label className="block text-sm font-medium text-surface-300 mb-1.5">Delivery Notes (Optional)</label>
                       <textarea

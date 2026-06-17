@@ -31,7 +31,7 @@ Website: https://book-hub-azure.vercel.app
 
 ## 📂 GitHub Repository
 
-https://github.com/your-username/bookhub-ai-store
+https://github.com/magdiabdalla179/book-hub/tree/main
 
 ## 👨‍💻 Author
 
